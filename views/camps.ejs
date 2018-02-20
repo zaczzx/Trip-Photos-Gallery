@@ -5,26 +5,26 @@
     <header class="jumbotron">
         <div class="container">
             <h1>Welcome to YelpCamp!</h1>
-            <p>View our handpicked campgrounds from all over the world</p>
+            <p>View our handpicked camps from all over the world</p>
             <p>
-                <a class="btn btn-primary btn-lg" href="/campgrounds/new">Add new campground</a>
+                <a class="btn btn-primary btn-lg" href="/camps/new">Add new Camp</a>
             </p>
         </div>
     </header>
     
     <div class="row">
         <div class="col-lg-12">
-            <h3>Our favorite moments</h3>
+            <h3>Our favorite Camps</h3>
         </div>
     </div>
     
     <div class="row text-center" style="display:flex; flex-wrap: wrap;">
-        <% campgrounds.forEach(function(campground){ %>
+        <% camps.forEach(function(camp){ %>
            <div class="col-md-3 col-sm-6">
                <div class="thumbnail">
-                    <image src="<%= campground.image %>"</image>
+                    <image src="<%= camp.image %>"</image>
                     <div class="caption">
-                        <h4><%= campground.name; %></h4> 
+                        <h4><%= camp.name; %></h4> 
                     </div>
                </div>
            </div> 
