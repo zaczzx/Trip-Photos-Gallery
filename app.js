@@ -3,7 +3,8 @@ var express = require("express"),
     bodyParser = require("body-parser"),
     mongoose = require("mongoose"),
     Camp = require("./models/camp"),
-    seedDB = require("./seed")
+    seedDB = require("./seed"),
+    Comment = require("./models/comment")
     
 seedDB();
 mongoose.connect("mongodb://localhost/yelpcamp"); 
@@ -20,7 +21,7 @@ app.get("/camps", function(req, res){
        if (err) {
            console.log(err);
        } else {
-           res.render("index", {camps:allCamps});
+           res.render("camps/index", {camps:allCamps});
        }
     });
 });
@@ -41,7 +42,7 @@ app.post("/camps", function(req, res){
 });
 
 app.get("/camps/new", function(req, res) {
-    res.render("new");
+    res.render("camps/new");
 });
 
 app.get("/camps/:id", function(req, res) {
@@ -50,9 +51,39 @@ app.get("/camps/:id", function(req, res) {
            console.log(err);
        } else {
            console.log(foundCamp);
-           res.render("show", {camp: foundCamp});
+           res.render("camps/show", {camp: foundCamp});
        }
     });
+});
+
+// ==============
+app.get("/camps/:id/comments/new", function(req, res) {
+   Camp.findById(req.params.id, function(err, camp){
+      if (err) {
+          console.log(err);
+      } else {
+          res.render("comments/new", {camp: camp});
+      }
+   }); 
+});
+
+app.post("/camps/:id/comments", function(req, res){
+   Camp.findById(req.params.id, function(err, camp) {
+        if (err) {
+            console.log(err);
+            res.redirect("/camps");
+        } else {
+            Comment.create(req.body.comment, function(err, comment){
+               if (err) {
+                   console.log(err);
+               } else {
+                   camp.comments.push(comment);
+                   camp.save();
+                   res.redirect("/camps/" + camp._id);
+               }
+            });
+        }
+   });
 });
 
 app.listen(process.env.PORT, process.env.IP, function(){
