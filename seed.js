@@ -6,17 +6,17 @@ var data = [
     {
         name: "Cloud's Rest", 
         image: "https://farm4.staticflickr.com/3795/10131087094_c1c0a1c859.jpg",
-        description: "Lorem ipsum dolor sit amet, "
+        description: "Lorem ipsum dolor sit amet,This place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internet "
     },
     {
         name: "Desert Mesa", 
         image: "https://farm6.staticflickr.com/5487/11519019346_f66401b6c1.jpg",
-        description: "Lorem ipsum dolor sit amet, "
+        description: "Lorem ipsum dolor sit amet, This place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internet"
     },
     {
         name: "Canyon Floor", 
         image: "https://farm1.staticflickr.com/189/493046463_841a18169e.jpg",
-        description: "Lorem ipsum dolor sit amet, "
+        description: "Lorem ipsum dolor sit amet,This place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internetThis place is great, but I wish there was internet This place is great, but I wish there was internetThis place is great, but I wish there was internet"
     }
 ]
  
