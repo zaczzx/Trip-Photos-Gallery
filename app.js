@@ -1,17 +1,13 @@
-var app = require("express")();
-var bodyParser = require("body-parser"),
-    mongoose = require("mongoose");
-
+var express = require("express"),
+    app = express(),
+    bodyParser = require("body-parser"),
+    mongoose = require("mongoose"),
+    Camp = require("./models/camp"),
+    seedDB = require("./seed")
+    
+seedDB();
 mongoose.connect("mongodb://localhost/yelpcamp"); 
 
-var campSchema = new mongoose.Schema({
-   name: String,
-   image: String,
-   description: String
-});
-
-var Camp = mongoose.model("Camp",campSchema);
-       
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
@@ -49,10 +45,11 @@ app.get("/camps/new", function(req, res) {
 });
 
 app.get("/camps/:id", function(req, res) {
-    Camp.findById(req.params.id, function(err, foundCamp){
+    Camp.findById(req.params.id).populate("comments").exec(function(err, foundCamp){
        if (err) {
            console.log(err);
        } else {
+           console.log(foundCamp);
            res.render("show", {camp: foundCamp});
        }
     });
