@@ -20,6 +20,12 @@
                     <p>
                         <em>Submit by <%= camp.author.username %></em>
                     </p>
+                    <% if (currentUser && camp.author.id.equals(currentUser._id)) { %>
+                        <a class="btn btn-warning" href="/camps/<%= camp._id %>/edit">Edit</a>
+                        <form id="delete" action="/camps/<%= camp._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">DELETE</button>
+                        </form>
+                    <% } %>
                 </div>
             </div>
             <div class="well">
@@ -35,6 +41,15 @@
                             <p>
                                 <%= comment.text %>
                             </p>
+                            <% if (currentUser && comment.author.id.equals(currentUser._id)) { %>
+                                <a  class="btn btn-xs btn-warning" 
+                                    href="/camps/<%= camp._id %>/comments/<%= comment._id %>/edit">
+                                    Edit
+                                </a>
+                                <form id="deleteComment" action="/camps/<%= camp._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
+                                    <input type="submit" class="btn btn-xs btn-danger" value="delete"></input>
+                                </form>
+                            <% } %>
                         </div>
                     </div>
                 <% }) %>                

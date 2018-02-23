@@ -5,3 +5,11 @@
 .thumbnail {
     padding: 0;
 }
+
+#delete {
+    display: inline;
+}
+
+#deleteComment {
+    display: inline;
+}
