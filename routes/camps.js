@@ -1,6 +1,7 @@
 var express = require("express");
 var router  = express.Router();
 var Camp    = require("../models/camp");
+var middlewareObj = require("../middleware");
 
 //index
 router.get("/", function(req, res){
@@ -27,7 +28,6 @@ router.post("/", isLoggedIn, function(req, res){
        if(err){
            console.log(err);
        } else {
-           console.log(newCreated);
            res.redirect("/camps");
        }
     });
@@ -44,10 +44,42 @@ router.get("/:id", function(req, res) {
        if (err) {
            console.log(err);
        } else {
-           console.log(foundCamp);
            res.render("camps/show", {camp: foundCamp});
        }
     });
+});
+
+//EDIT
+router.get("/:id/edit", middlewareObj.checkUserOwnsCamp, function(req, res) {
+    Camp.findById(req.params.id, function(err, foundCamp){
+        if (err) {
+            res.redirect("/camps");
+        } else {
+            res.render("camps/edit", {camp: foundCamp});
+        }
+    });
+});
+
+//UPDATE
+router.put("/:id", middlewareObj.checkUserOwnsCamp, function(req, res){
+    Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err, updatedCamp){
+       if (err) {
+           res.redirect("/camps");
+       } else {
+           res.redirect("/camps/" + req.params.id);
+       }
+    }); 
+});
+
+//DELETE
+router.delete("/:id", middlewareObj.checkUserOwnsCamp, function(req, res){
+   Camp.findByIdAndRemove(req.params.id, function(err){
+        if (err) {
+            res.redirect("/camps");
+        } else {
+            res.redirect("/camps");
+        }
+   });
 });
 
 //middleware

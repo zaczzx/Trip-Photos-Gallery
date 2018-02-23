@@ -2,9 +2,10 @@ var express     = require("express");
 var router      = express.Router({mergeParams: true});
 var Camp        = require("../models/camp");
 var Comment     = require("../models/comment");
+var middlewareObj = require("../middleware");
 
 //Comment new
-router.get("/new", isLoggedIn, function(req, res) {
+router.get("/new", middlewareObj.isLoggedIn, function(req, res) {
    Camp.findById(req.params.id, function(err, camp){
       if (err) {
           console.log(err);
@@ -15,7 +16,7 @@ router.get("/new", isLoggedIn, function(req, res) {
 });
 
 //Comment create
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middlewareObj.isLoggedIn, function(req, res){
    Camp.findById(req.params.id, function(err, camp) {
         if (err) {
             console.log(err);
@@ -38,12 +39,37 @@ router.post("/", isLoggedIn, function(req, res){
    });
 });
 
-//middleware
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
+//COMMENT Edit
+router.get("/:commentId/edit", middlewareObj.checkUserOwnsComment, function(req, res){
+    Comment.findById(req.params.commentId, function(err, foundComment) {
+       if (err) {
+           res.redirect("back");
+       } else {
+           res.render("comments/edit", {camp_id: req.params.id, comment: foundComment});
+       }
+    });
+});
+
+//COMMENT Update
+router.put("/:commentId", middlewareObj.checkUserOwnsComment, function(req, res){
+    Comment.findByIdAndUpdate(req.params.commentId, req.body.comment, function(err, updatedComment){
+        if (err) {
+            res.redirect("back");
+        } else {
+            res.redirect("/camps/" + req.params.id);
+        }
+    });
+});
+
+//COMMENT Delete
+router.delete("/:commentId", middlewareObj.checkUserOwnsComment, function(req, res){
+    Comment.findByIdAndRemove(req.params.commentId, function(err){
+        if (err) {
+            res.redirect("back");
+        } else {
+            res.redirect("/camps/" + req.params.id);
+        }
+    });
+});
 
 module.exports = router;
