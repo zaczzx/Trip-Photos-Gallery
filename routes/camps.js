@@ -15,7 +15,7 @@ router.get("/", function(req, res){
 });
 
 //Camp create
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middlewareObj.isLoggedIn, function(req, res){
     var name = req.body.name;
     var image = req.body.image;
     var description = req.body.description;
@@ -34,7 +34,7 @@ router.post("/", isLoggedIn, function(req, res){
 });
 
 //Camp new
-router.get("/new", isLoggedIn, function(req, res) {
+router.get("/new", middlewareObj.isLoggedIn, function(req, res) {
     res.render("camps/new");
 });
 
@@ -81,13 +81,5 @@ router.delete("/:id", middlewareObj.checkUserOwnsCamp, function(req, res){
         }
    });
 });
-
-//middleware
-function isLoggedIn(req, res, next) {
-    if (req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
 
 module.exports = router;
