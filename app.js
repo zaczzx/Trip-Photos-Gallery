@@ -12,11 +12,10 @@ var commentRoutes   = require("./routes/comments"),
     campRoutes      = require("./routes/camps"),
     indexRoutes     = require("./routes/index");
     
-mongoose.connect("mongodb://zaoxuanz:zaczzx@ds151528.mlab.com:51528/zac_yelpcamp"); 
-// mongodb://localhost/yelpcamp
-app.set("view engine", "ejs");
-// seedDB();
+var url = process.env.DATABASEURL || "mongodb://localhost/yelpcamp";
+mongoose.connect(url); 
 
+app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + "/public"));
