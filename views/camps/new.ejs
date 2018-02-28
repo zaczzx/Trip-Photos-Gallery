@@ -36,5 +36,12 @@
     </div>
 </div>
 
+<script>
+    function activatePlacesSearch() {
+        var input = document.getElementById('location');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+    }
+</script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN6ZzlUjrykKAgGaNAyHk69XwBnIGrEyE&libraries=places&callback=activatePlacesSearch"></script>
 <% include ../partials/footer %>
 
