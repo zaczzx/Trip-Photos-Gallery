@@ -2,6 +2,7 @@ var express = require("express");
 var router  = express.Router();
 var Camp    = require("../models/camp");
 var middlewareObj = require("../middleware");
+var geocoder = require("geocoder");
 
 //index
 router.get("/", function(req, res){
@@ -24,13 +25,22 @@ router.post("/", middlewareObj.isLoggedIn, function(req, res){
         id: req.user._id,
         username: req.user.username
     };
-    var newCamp = {name:name, price:price, image:image, description: description, author:author};
-    Camp.create(newCamp, function(err, newCreated){
-       if(err){
-           console.log(err);
-       } else {
-           res.redirect("/camps");
-       }
+    geocoder.geocode(req.body.location, function (err, data) {
+        if (err || data.status === 'ZERO_RESULTS') {
+            req.flash('error', 'Invalid address, try typing a new address');
+            return res.redirect('back');
+        }
+        var lat = data.results[0].geometry.location.lat;
+        var lng = data.results[0].geometry.location.lng;
+        var location = data.results[0].formatted_address;
+        var newCamp = {name:name, price:price, image:image, description: description, author:author, location:location, lat: lat, lng: lng};
+        Camp.create(newCamp, function(err, newCreated){
+           if(err){
+               console.log(err);
+           } else {
+               res.redirect("/camps");
+           }
+        });
     });
 });
 
@@ -62,14 +72,22 @@ router.get("/:id/edit", middlewareObj.checkUserOwnsCamp, function(req, res) {
 });
 
 //UPDATE
-router.put("/:id", middlewareObj.checkUserOwnsCamp, function(req, res){
-    Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err, updatedCamp){
-       if (err) {
-           res.redirect("/camps");
-       } else {
-           res.redirect("/camps/" + req.params.id);
-       }
-    }); 
+router.put("/:id", function(req, res){
+  geocoder.geocode(req.body.location, function (err, data) {
+    var lat = data.results[0].geometry.location.lat;
+    var lng = data.results[0].geometry.location.lng;
+    var location = data.results[0].formatted_address;
+    var newData = {name: req.body.name, image: req.body.image, description: req.body.description, cost: req.body.cost, location: location, lat: lat, lng: lng};
+    Camp.findByIdAndUpdate(req.params.id, {$set: newData}, function(err, camp){
+        if(err){
+            req.flash("error", err.message);
+            res.redirect("back");
+        } else {
+            req.flash("success","Successfully Updated!");
+            res.redirect("/camps/" + camp._id);
+        }
+    });
+  });
 });
 
 //DELETE
