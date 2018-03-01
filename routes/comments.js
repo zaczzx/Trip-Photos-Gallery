@@ -67,7 +67,17 @@ router.delete("/:commentId", middlewareObj.checkUserOwnsComment, function(req, r
         if (err) {
             res.redirect("back");
         } else {
-            res.redirect("/camps/" + req.params.id);
+            Camp.findByIdAndUpdate(req.params.id, {
+                $pull: {comments: req.params.commentId}
+            }, function(err, data){
+                if(err){
+                    req.flash("error", "Could not DELETE comment!");
+                    console.log(err);
+                } else {
+                    req.flash("success", "COMMENT SUCCESSFULLY DELETED!");
+                    res.redirect("/camps/" + req.params.id);
+                }
+            });
         }
     });
 });

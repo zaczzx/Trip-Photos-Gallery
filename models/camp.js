@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+var Comment = require('./comment'); 
 var campSchema = new mongoose.Schema({
    name: String,
    image: String,

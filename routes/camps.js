@@ -1,6 +1,7 @@
 var express = require("express");
 var router  = express.Router();
 var Camp    = require("../models/camp");
+var Comment    = require("../models/comment");
 var middlewareObj = require("../middleware");
 var geocoder = require("geocoder");
 
@@ -52,7 +53,8 @@ router.get("/new", middlewareObj.isLoggedIn, function(req, res) {
 //Camps show
 router.get("/:id", function(req, res) {
     Camp.findById(req.params.id).populate("comments").exec(function(err, foundCamp){
-       if (err) {
+       if (err || !foundCamp) {
+           req.flash('error', 'Sorry, that camp does not exist!');
            console.log(err);
        } else {
            res.render("camps/show", {camp: foundCamp});
@@ -91,14 +93,31 @@ router.put("/:id", function(req, res){
 });
 
 //DELETE
-router.delete("/:id", middlewareObj.checkUserOwnsCamp, function(req, res){
-   Camp.findByIdAndRemove(req.params.id, function(err){
-        if (err) {
+router.delete("/:id", middlewareObj.isLoggedIn, middlewareObj.checkUserOwnsCamp, function(req, res){
+    Camp.findByIdAndRemove(req.params.id, function(err, foundCamp){
+        if(err){
+            req.flash("error", "Something went wrong! " + err);
             res.redirect("/camps");
         } else {
-            res.redirect("/camps");
+            //delete related comments
+            Comment.remove({_id: {$in: foundCamp.comments}}, function(err, result){
+                if(err){
+                    req.flash("error", "Something went wrong! " + err);
+                    res.redirect("/camps");
+                }
+            });
+            //delete camp
+            foundCamp.remove(function(err, deletedCamp){
+                if(err){
+                    req.flash("error", "Something went wrong! " + err);
+                    res.redirect("/camps");
+                } else {
+                    req.flash("error", "Camp Successfully Deleted!");
+                    res.redirect("/camps");
+                }
+            });
         }
-   });
+    });
 });
 
 module.exports = router;
