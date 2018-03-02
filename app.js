@@ -7,6 +7,8 @@ var express         = require("express"),
     methodOverride  = require("method-override"),
     flash           = require("connect-flash-plus"),
     User            = require("./models/user");
+    require('dotenv').config();
+
 
 var commentRoutes   = require("./routes/comments"),
     campRoutes      = require("./routes/camps"),
