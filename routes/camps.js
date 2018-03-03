@@ -45,6 +45,9 @@ router.post("/", middlewareObj.isLoggedIn, upload.single('image'), function(req,
             req.flash('error', 'Invalid address, try typing a new address');
             return res.redirect('back');
         }
+        req.body.camp.lat = data.results[0].geometry.location.lat;
+        req.body.camp.lng = data.results[0].geometry.location.lng;
+        req.body.camp.location = data.results[0].formatted_address;
         cloudinary.v2.uploader.upload(req.file.path, function(err, result){
             if(err) {
                 req.flash('error', err.message);
@@ -56,9 +59,6 @@ router.post("/", middlewareObj.isLoggedIn, upload.single('image'), function(req,
                 id: req.user._id,
                 username: req.user.username
             };
-            req.body.camp.lat = data.results[0].geometry.location.lat;
-            req.body.camp.lng = data.results[0].geometry.location.lng;
-            req.body.camp.location = data.results[0].formatted_address;
             Camp.create(req.body.camp, function(err, newCreated){
                if(err){
                    req.flash('error', err.message);
@@ -108,6 +108,9 @@ router.put("/:id", middlewareObj.checkUserOwnsCamp, upload.single('image'), func
             req.flash('error', 'Invalid address, try typing a new address');
             return res.redirect('back');
         }
+        req.body.camp.lat = data.results[0].geometry.location.lat;
+        req.body.camp.lng = data.results[0].geometry.location.lng;
+        req.body.camp.location = data.results[0].formatted_address;
         if (req.file) {
             Camp.findById(req.params.id, function(err, camp) {
               if(err) {
@@ -130,9 +133,6 @@ router.put("/:id", middlewareObj.checkUserOwnsCamp, upload.single('image'), func
                   req.body.camp.image = result.secure_url;
                   // add image's public_id to camp object
                   req.body.camp.image_id = result.public_id;
-                  req.body.camp.lat = data.results[0].geometry.location.lat;
-                  req.body.camp.lng = data.results[0].geometry.location.lng;
-                  req.body.camp.location = data.results[0].formatted_address;
                   Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err) {
                     if(err) {
                       req.flash('error', err.message);
@@ -145,9 +145,6 @@ router.put("/:id", middlewareObj.checkUserOwnsCamp, upload.single('image'), func
               });
             });
         } else {
-            req.body.camp.lat = data.results[0].geometry.location.lat;
-            req.body.camp.lng = data.results[0].geometry.location.lng;
-            req.body.camp.location = data.results[0].formatted_address;
             Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err) {
               if(err) {
                 req.flash('error', err.message);
