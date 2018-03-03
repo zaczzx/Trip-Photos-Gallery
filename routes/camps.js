@@ -29,13 +29,28 @@ cloudinary.config({
 
 //index
 router.get("/", function(req, res){
-    Camp.find({},function(err, allCamps){
-       if (err) {
-           console.log(err);
-       } else {
-           res.render("camps/index", {camps:allCamps, page:'camps'});
-       }
-    });
+    var noMatch;
+    if (req.query.search){
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        Camp.find({name: regex},function(err, allCamps){
+            if (err) {
+                console.log(err);
+            } else {
+                if (allCamps.length < 1) {
+                    noMatch = "No camps match that search. Please try again :)";
+                }
+                res.render("camps/index", {camps:allCamps, noMatch:noMatch});
+            }
+        });
+    } else {
+        Camp.find({},function(err, allCamps){
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("camps/index", {camps:allCamps, noMatch:noMatch});
+            }
+        });  
+    }
 });
 
 //Camp create
@@ -63,9 +78,8 @@ router.post("/", middlewareObj.isLoggedIn, upload.single('image'), function(req,
                if(err){
                    req.flash('error', err.message);
                    return res.redirect('back');
-               } else {
-                   res.redirect("/camps/" + newCreated.id);
                }
+               res.redirect("/camps/" + newCreated.id);
             });
         });
     });
@@ -184,5 +198,9 @@ router.delete("/:id", middlewareObj.isLoggedIn, middlewareObj.checkUserOwnsCamp,
         }
     });
 });
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
 
 module.exports = router;

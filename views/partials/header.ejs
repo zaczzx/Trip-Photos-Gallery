@@ -3,7 +3,7 @@
     <head>
         <!-- Make site responsive on mobile/tablet -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>YelpCamp</title>
+        <title>ZacCamp</title>
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="/stylesheets/main.css"></link>
     </head>
@@ -19,12 +19,18 @@
                   <span class="icon-bar"></span>
                 </button>
     
-                <a class="navbar-brand" href="/">YelpCamp</a>
+                <a class="navbar-brand" href="/">ZacCamp</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
               <ul class="nav navbar-nav">
                 <li class="<%= typeof page !== 'undefined' && page === 'camps' ? 'active' : '' %>"><a href="/camps">Home</a></li>
               </ul>
+                <form action="/camps" method="GET" class="navbar-form navbar-left" >
+                    <div class="form-group">
+                        <input type="text" name="search" placeholder="Search" class="form-control"></input>
+                        <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </div>
+                </form>  
               <ul class="nav navbar-nav navbar-right">
                   <% if(!currentUser){ %>
                       <li class="<%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>"><a href="/login">Log In</a></li>
