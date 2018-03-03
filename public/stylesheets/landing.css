@@ -40,7 +40,7 @@ body {
 }
 
 .slideshow li:nth-child(1) { 
-  background-image: url(https://images.pexels.com/photos/207171/pexels-photo-207171.jpeg?h=350&dpr=2&auto=compress&cs=tinysrgb) 
+  background-image: url(https://images.pexels.com/photos/355770/pexels-photo-355770.jpeg?h=350&dpr=2&auto=compress&cs=tinysrgb);
 }
 .slideshow li:nth-child(2) { 
   background-image: url(https://images.pexels.com/photos/218983/pexels-photo-218983.jpeg?h=350&dpr=2&auto=compress&cs=tinysrgb);
@@ -55,7 +55,7 @@ body {
   animation-delay: 15s; 
 }
 .slideshow li:nth-child(5) { 
-  background-image: url(https://images.pexels.com/photos/355770/pexels-photo-355770.jpeg?h=350&dpr=2&auto=compress&cs=tinysrgb);
+  background-image: url(https://images.pexels.com/photos/207171/pexels-photo-207171.jpeg?h=350&dpr=2&auto=compress&cs=tinysrgb);
   animation-delay: 20s; 
 }
 
