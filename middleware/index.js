@@ -9,7 +9,7 @@ middlewareObj.checkUserOwnsCamp = function (req, res, next) {
                 req.flash("error", "Camp not found");
                 res.redirect("back");
             } else {
-                if (foundCamp.author.id.equals(req.user.id)) {
+                if (foundCamp.author.id.equals(req.user.id) || req.user.isAdmin) {
                     return next();
                 } else {
                     req.flash("error", "You don't have permission to do that");
@@ -30,7 +30,7 @@ middlewareObj.checkUserOwnsComment = function (req, res, next) {
                 req.flash("error", "Comment not found");
                 res.redirect("back");
             } else {
-                if (foundComment.author.id.equals(req.user.id)) {
+                if (foundComment.author.id.equals(req.user.id) || req.user.isAdmin) {
                     return next();
                 } else {
                     req.flash("error", "You don't have permission to do that");
