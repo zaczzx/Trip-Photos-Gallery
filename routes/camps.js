@@ -39,7 +39,7 @@ router.get("/", function(req, res){
                 if (allCamps.length < 1) {
                     noMatch = "No camps match that search. Please try again :)";
                 }
-                res.render("camps/index", {camps:allCamps, noMatch:noMatch});
+                res.render("camps/index", {camps:allCamps, noMatch:noMatch, page:'camps'});
             }
         });
     } else {
@@ -47,7 +47,7 @@ router.get("/", function(req, res){
             if (err) {
                 console.log(err);
             } else {
-                res.render("camps/index", {camps:allCamps, noMatch:noMatch});
+                res.render("camps/index", {camps:allCamps, noMatch:noMatch, page:'camps'});
             }
         });  
     }
@@ -87,7 +87,7 @@ router.post("/", middlewareObj.isLoggedIn, upload.single('image'), function(req,
 
 //Camp new
 router.get("/new", middlewareObj.isLoggedIn, function(req, res) {
-    res.render("camps/new");
+    res.render("camps/new", {page:'new'});
 });
 
 //Camps show
