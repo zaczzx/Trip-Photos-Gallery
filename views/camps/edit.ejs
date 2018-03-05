@@ -40,6 +40,6 @@
         var autocomplete = new google.maps.places.Autocomplete(input);
     }
 </script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN6ZzlUjrykKAgGaNAyHk69XwBnIGrEyE&libraries=places&callback=activatePlacesSearch"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAPS_API_KEY %>&libraries=places&callback=activatePlacesSearch"></script>
 <% include ../partials/footer %>
 

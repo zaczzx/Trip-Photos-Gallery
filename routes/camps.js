@@ -3,7 +3,13 @@ var router  = express.Router();
 var Camp    = require("../models/camp");
 var Comment    = require("../models/comment");
 var middlewareObj = require("../middleware");
-var geocoder = require("geocoder");
+var NodeGeocoder = require('node-geocoder');
+var options = {
+  provider: 'google',
+  httpAdapter: 'https',
+  apiKey: process.env.GOOGLE_MAPS_API_KEY
+};
+var geocoder = NodeGeocoder(options);
 
 var multer = require('multer');
 var storage = multer.diskStorage({
@@ -29,27 +35,49 @@ cloudinary.config({
 
 //index
 router.get("/", function(req, res){
+    var perPage = 6;
+    var pageQuery = parseInt(req.query.page);
+    var pageNumber = pageQuery ? pageQuery : 1;
     var noMatch;
     if (req.query.search){
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        Camp.find({name: regex},function(err, allCamps){
-            if (err) {
-                console.log(err);
-            } else {
-                if (allCamps.length < 1) {
-                    noMatch = "No camps match that search. Please try again :)";
+        Camp.find({name: regex}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, allCamps) {
+            Camp.count({name: regex}).exec(function (err, count) {
+                if (err) {
+                    console.log(err);
+                    res.redirect("back");
+                } else {
+                    if (allCamps.length < 1) {
+                        noMatch = "No camps match that search. Please try again :)";
+                    }
+                    res.render("camps/index", {
+                        camps:allCamps,
+                        current: pageNumber,
+                        pages: Math.ceil(count / perPage),
+                        noMatch:noMatch,
+                        search: req.query.search,
+                        page:'camps'
+                    });
                 }
-                res.render("camps/index", {camps:allCamps, noMatch:noMatch, page:'camps'});
-            }
+            });
         });
     } else {
-        Camp.find({},function(err, allCamps){
-            if (err) {
-                console.log(err);
-            } else {
-                res.render("camps/index", {camps:allCamps, noMatch:noMatch, page:'camps'});
-            }
-        });  
+        Camp.find({}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, allCamps) {
+            Camp.count().exec(function (err, count) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.render("camps/index", {
+                        camps:allCamps, 
+                        current: pageNumber,
+                        pages: Math.ceil(count / perPage),
+                        noMatch:noMatch, 
+                        search: false,
+                        page:'camps'
+                    });
+                }
+            });
+        });
     }
 });
 
@@ -60,9 +88,9 @@ router.post("/", middlewareObj.isLoggedIn, upload.single('image'), function(req,
             req.flash('error', 'Invalid address, try typing a new address');
             return res.redirect('back');
         }
-        req.body.camp.lat = data.results[0].geometry.location.lat;
-        req.body.camp.lng = data.results[0].geometry.location.lng;
-        req.body.camp.location = data.results[0].formatted_address;
+        req.body.camp.lat = data[0].latitude;
+        req.body.camp.lng = data[0].longitude;
+        req.body.camp.location = data[0].formattedAddress;
         cloudinary.v2.uploader.upload(req.file.path, function(err, result){
             if(err) {
                 req.flash('error', err.message);
