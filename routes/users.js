@@ -52,7 +52,8 @@ router.put("/:id", middleware.isLoggedIn, middleware.checkUserOwnsUser, upload.s
                 req.flash("error", "Something went wrong.");
                 return res.redirect("back");
             }
-            eval(require('locus'));
+            console.log(foundUser);
+            console.log(foundUser.avatar_id);
             if (! foundUser.avatar_id === "0") {
                 cloudinary.v2.uploader.destroy(foundUser.avatar_id, function(err, result){
                     if(err) {
