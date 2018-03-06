@@ -49,12 +49,16 @@ router.put("/:id", middleware.isLoggedIn, middleware.checkUserOwnsUser, upload.s
    if (req.file) {
         User.findById(req.params.id, function(err, foundUser) {
             if (err) {
+                console.log(err.message);
                 req.flash("error", "Something went wrong.");
                 return res.redirect("back");
             }
             console.log(foundUser);
             console.log(foundUser.avatar_id);
-            if (! foundUser.avatar_id === "0") {
+            console.log(!foundUser.avatar_id === "0");
+            console.log(!foundUser.avatar_id === '0');
+            if (!foundUser.avatar_id === "0") {
+                console.log("im here");
                 cloudinary.v2.uploader.destroy(foundUser.avatar_id, function(err, result){
                     if(err) {
                       req.flash('error', err.message);
