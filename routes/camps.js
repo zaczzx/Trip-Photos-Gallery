@@ -148,9 +148,9 @@ router.put("/:id", middleware.checkUserOwnsCamp, upload.single('image'), functio
             req.flash('error', 'Invalid address, try typing a new address');
             return res.redirect('back');
         }
-        req.body.camp.lat = data.results[0].geometry.location.lat;
-        req.body.camp.lng = data.results[0].geometry.location.lng;
-        req.body.camp.location = data.results[0].formatted_address;
+        req.body.camp.lat = data[0].latitude;
+        req.body.camp.lng = data[0].longitude;
+        req.body.camp.location = data[0].formattedAddress;
         if (req.file) {
             Camp.findById(req.params.id, function(err, camp) {
                 if(err) {

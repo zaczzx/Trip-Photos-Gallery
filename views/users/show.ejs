@@ -10,10 +10,11 @@
     		<p><%= user.bio%></p>
     		<% if(typeof user.bio === 'undefined' || user.bio.length === 0) {%><p> No bio provided for the profile yet </p> <% } %>
     		<div class="caption">
-    		    <i class="fa fa-lg fa-envelope-o" aria-hidden="true"></i>
-    		    <a href="mailto:<%= user.email %>"><%= user.email %></a>
+                <p><i class="far fa-envelope"></i> <a href="mailto:<%= user.email %>"><%= user.email %></a></p>
     		</div>
-    	    <p><i class="fa fa-lg fa-calendar" aria-hidden="true"></i>Joined <%= moment(user.createdAt).format('MMMM YYYY') %></p>
+    		<div class="caption">
+    	        <p><i class="far fa-calendar"></i> joined <%= moment(user.createdAt).format('MMMM YYYY') %></p>
+    	    </div>
         </div>
         <div class="col-sm-12 col-lg-9 col-md-7" id="profile-nav-tabs">
             <ul class="nav nav-tabs nav-justified" role="tablist">
