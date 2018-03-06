@@ -23,23 +23,24 @@
                 
             </div>
             <div id="navbar" class="collapse navbar-collapse">
-              <ul class="nav navbar-nav">
-                <li class="<%= typeof page !== 'undefined' && page === 'camps' ? 'active' : '' %>"><a href="/camps">Home</a></li>
-                <li class="<%= typeof page !== 'undefined' && page === 'new' ? 'active' : '' %>"><a href="/camps/new">Add a Camp</a></li>
-              </ul>
               <ul class="nav navbar-nav navbar-right">
                   <% if(!currentUser){ %>
                       <li class="<%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>"><a href="/login">LogIn</a></li>
                       <li class="<%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>"><a href="/register">SignUp</a></li>
                   <% } else { %>
-                      <li><a href="#">Signed In As <%= currentUser.username %></a></li>
-                      <li><a href="/logout">Logout</a></li>
+                      <li class="nav-link"><a href="/users/<%= currentUser.id %>"><img class="navbar-avatar" src=<%= currentUser.avatar %>></a></li>
+                      <li><a href="/logout">Logout <span class="glyphicon glyphicon-log-out"></a></li>
                   <% } %>
+              </ul>
+              <ul class="nav navbar-nav">
+                <li class="<%= typeof page !== 'undefined' && page === 'camps' ? 'active' : '' %>"><a href="/camps">Home</a></li>
+                <li class="<%= typeof page !== 'undefined' && page === 'new' ? 'active' : '' %>"><a href="/camps/new">Add a Camp</a></li>
               </ul>
               <form action="/camps" method="GET" class="navbar-form navbar-left" >
                 <div class="form-group">
-                    <input type="text" name="search" placeholder="Search" class="form-control"></input>
-                    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    <input type="text" name="search" placeholder="Search" class="form-control"><button type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                    </input>
                 </div>
             </form>
             </div>

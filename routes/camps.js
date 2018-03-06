@@ -2,7 +2,8 @@ var express = require("express");
 var router  = express.Router();
 var Camp    = require("../models/camp");
 var Comment    = require("../models/comment");
-var middlewareObj = require("../middleware");
+var middleware = require("../middleware");
+
 var NodeGeocoder = require('node-geocoder');
 var options = {
   provider: 'google',
@@ -28,7 +29,7 @@ var upload = multer({storage: storage, fileFilter: imageFilter});
 
 var cloudinary = require('cloudinary');
 cloudinary.config({ 
-  cloud_name: 'dxjct4uc3', 
+  cloud_name: process.env.CLOUDINARY_NAME, 
   api_key: process.env.CLOUDINARY_API_KEY, 
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
@@ -82,7 +83,7 @@ router.get("/", function(req, res){
 });
 
 //Camp create
-router.post("/", middlewareObj.isLoggedIn, upload.single('image'), function(req, res){
+router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, res){
     geocoder.geocode(req.body.location, function (err, data) {
         if (err || data.status === 'ZERO_RESULTS') {
             req.flash('error', 'Invalid address, try typing a new address');
@@ -114,7 +115,7 @@ router.post("/", middlewareObj.isLoggedIn, upload.single('image'), function(req,
 });
 
 //Camp new
-router.get("/new", middlewareObj.isLoggedIn, function(req, res) {
+router.get("/new", middleware.isLoggedIn, function(req, res) {
     res.render("camps/new", {page:'new'});
 });
 
@@ -131,7 +132,7 @@ router.get("/:id", function(req, res) {
 });
 
 //EDIT
-router.get("/:id/edit", middlewareObj.checkUserOwnsCamp, function(req, res) {
+router.get("/:id/edit", middleware.checkUserOwnsCamp, function(req, res) {
     Camp.findById(req.params.id, function(err, foundCamp){
         if (err) {
             res.redirect("/camps");
@@ -143,7 +144,7 @@ router.get("/:id/edit", middlewareObj.checkUserOwnsCamp, function(req, res) {
 
 //UPDATE
 // UPDATE Camp ROUTE
-router.put("/:id", middlewareObj.checkUserOwnsCamp, upload.single('image'), function(req, res){
+router.put("/:id", middleware.checkUserOwnsCamp, upload.single('image'), function(req, res){
     // if a new file has been uploaded
     geocoder.geocode(req.body.location, function (err, data) {
         if (err || data.status === 'ZERO_RESULTS') {
@@ -155,36 +156,36 @@ router.put("/:id", middlewareObj.checkUserOwnsCamp, upload.single('image'), func
         req.body.camp.location = data.results[0].formatted_address;
         if (req.file) {
             Camp.findById(req.params.id, function(err, camp) {
-              if(err) {
-                req.flash('error', err.message);
-                return res.redirect('back');
-              }
-              // delete the file from cloudinary
-              cloudinary.v2.uploader.destroy(camp.image_id, function(err, result){
                 if(err) {
-                  req.flash('error', err.message);
-                  return res.redirect('back');
-                }
-                // upload a new one
-                cloudinary.v2.uploader.upload(req.file.path, function(err, result) {
-                  if(err) {
                     req.flash('error', err.message);
                     return res.redirect('back');
-                  }
-                  // add cloudinary url for the image to the camp object under image property
-                  req.body.camp.image = result.secure_url;
-                  // add image's public_id to camp object
-                  req.body.camp.image_id = result.public_id;
-                  Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err) {
+                }
+                // delete the file from cloudinary
+                cloudinary.v2.uploader.destroy(camp.image_id, function(err, result){
                     if(err) {
                       req.flash('error', err.message);
                       return res.redirect('back');
                     }
-                    req.flash('success','Successfully Updated!');
-                    res.redirect('/camps/' + camp._id);
-                  });
+                    // upload a new one
+                    cloudinary.v2.uploader.upload(req.file.path, function(err, result) {
+                        if(err) {
+                            req.flash('error', err.message);
+                            return res.redirect('back');
+                        }
+                        // add cloudinary url for the image to the camp object under image property
+                        req.body.camp.image = result.secure_url;
+                        // add image's public_id to camp object
+                        req.body.camp.image_id = result.public_id;
+                        Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err) {
+                            if(err) {
+                              req.flash('error', err.message);
+                              return res.redirect('back');
+                            }
+                            req.flash('success','Successfully Updated!');
+                            res.redirect('/camps/' + camp._id);
+                        });
+                    });
                 });
-              });
             });
         } else {
             Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err) {
@@ -200,8 +201,8 @@ router.put("/:id", middlewareObj.checkUserOwnsCamp, upload.single('image'), func
 });
 
 //DELETE
-router.delete("/:id", middlewareObj.isLoggedIn, middlewareObj.checkUserOwnsCamp, function(req, res){
-    Camp.findByIdAndRemove(req.params.id, function(err, foundCamp){
+router.delete("/:id", middleware.isLoggedIn, middleware.checkUserOwnsCamp, function(req, res){
+    Camp.findById(req.params.id, function(err, foundCamp){
         if(err){
             req.flash("error", "Something went wrong! " + err);
             res.redirect("/camps");
@@ -214,7 +215,7 @@ router.delete("/:id", middlewareObj.isLoggedIn, middlewareObj.checkUserOwnsCamp,
                 }
             });
             //delete camp
-            foundCamp.remove(function(err, deletedCamp){
+            foundCamp.remove(function(err){
                 if(err){
                     req.flash("error", "Something went wrong! " + err);
                     res.redirect("/camps");

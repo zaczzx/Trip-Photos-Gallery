@@ -13,19 +13,20 @@ router.get("/", function(req, res){
 
 //sign up form
 router.get("/register", function(req, res) {
-    res.render("register", {page:'register'});
+    res.render("users/register", {page:'register'});
 });
 
 //sign up logic
 router.post("/register", function(req, res) {
-    var newUser = new User({username: req.body.username, email: req.body.email});
+    var newUser = new User({username: req.body.username, displayName: req.body.displayName, email: req.body.email});
     if (req.body.adminCode === "zac is cool") {
         newUser.isAdmin = true;
     }
+    newUser.avatar = "/images/user-default.png";
     User.register(newUser, req.body.password, function(err, user) {
         if (err) {
             console.log(err);
-            return res.render("register", {error: err.message});
+            return res.render("users/register", {error: err.message});
         }
         passport.authenticate("local")(req, res, function(){
             req.flash("success", "Successfully Signed Up! Nice to meet you " + user.username);
@@ -36,7 +37,7 @@ router.post("/register", function(req, res) {
 
 //login form
 router.get("/login", function(req, res) {
-    res.render("login", {page: 'login'});
+    res.render("users/login", {page: 'login'});
 });
 
 //login logic
@@ -57,7 +58,7 @@ router.get("/logout", function(req, res) {
 });
 
 router.get("/forgot", function(req, res) {
-   res.render("forgot"); 
+   res.render("users/forgot"); 
 });
 
 router.post('/forgot', function(req, res, next) {
@@ -125,7 +126,7 @@ router.get('/reset/:token', function(req, res) {
       req.flash('error', 'Password reset token is invalid or has expired.');
       return res.redirect('/forgot');
     }
-    res.render('reset', {token: req.params.token});
+    res.render('users/reset', {token: req.params.token});
   });
 });
 

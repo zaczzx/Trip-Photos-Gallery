@@ -1,0 +1,89 @@
+<% include ../partials/header %>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-lg-3 col-md-5">
+            <div class="thumbnail">
+    		<img class="avatar" src="<%= user.avatar %>" alt="user profile image">
+    		</div>
+    		<h3 class="name"><%= user.displayName %></h3>
+    		<p><%= user.bio%></p>
+    		<% if(typeof user.bio === 'undefined' || user.bio.length === 0) {%><p> No bio provided for the profile yet </p> <% } %>
+    		<div class="caption">
+    		    <i class="fa fa-lg fa-envelope-o" aria-hidden="true"></i>
+    		    <a href="mailto:<%= user.email %>"><%= user.email %></a>
+    		</div>
+    	    <p><i class="fa fa-lg fa-calendar" aria-hidden="true"></i>Joined <%= moment(user.createdAt).format('MMMM YYYY') %></p>
+        </div>
+        <div class="col-sm-12 col-lg-9 col-md-7" id="profile-nav-tabs">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#camps" role="tab">Camps </a>
+                </li>
+                <li class="nav-item">
+                   <a class="nav-link" data-toggle="tab" href="#comments" role="tab">Comment</a>
+                 </li>
+                 <% if(currentUser && user._id.equals(currentUser._id) || currentUser && currentUser.isAdmin){ %>
+                     <li class="nav-item">
+                       <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Settings</a>
+                     </li>
+                 <% } %>
+            </ul>
+            
+            <div class="tab-content">
+                <div class="tab-pane active" id="camps" role="tabpanel" style="padding-top:20px">
+                    <% camps.forEach(function(camp) { %>
+                        <div class="media">
+                            <div class="media-body">
+                                <div class="col-lg-6 col-sm-12 ">
+                                <div class="thumbnail">
+                                <a href="/camps/<%= camp.id %>"><img class="profile-gallery-images" src="<%= camp.image%>" data-toggle="tooltip" data-placement="top" title="<%= camp.name%>"></a>
+                                </div>
+                                </div>
+                                <a class="media-heading" href="/camps/<%= camp._id %>"><%= camp.name %></a>
+                                <p><%= camp.description %></p>                            
+                                <p> Creates <%= moment(camp.createdAt).fromNow() %> </p>
+                            </div> 
+                        </div>
+                        <hr>
+                    <% }); %>
+                </div>
+                
+                <div class="tab-pane" id="comments" role="tabpanel"></div>
+                
+                <div class="tab-pane" id="settings" role="tabpanel">
+                    <div style="width:70%; margin:25px auto">
+                        <h3 class="text-center">Account Settings</h3>
+                        <form action="/users/<%=user.id%>?_method=PUT" method="POST" enctype="multipart/form-data" id="settings-form">
+                            <div class="form-group">
+                                <label for="avatar">Profile Picture</label>
+                                <input class="form-control" type="file" name="avatar" id="avatar" accept:"image/*" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="displayName">Display Name</label>
+                                <input class="form-control" type="text" name="user[displayName]" placeholder="Enter Your Name Here" required value="<%= user.displayName %>">
+                            </div>
+                            <div class="form-group">
+                                <label for="bio">Bio</label>
+                                <textarea class="form-control" type="text"col="6" rows="2" name="user[bio]" placeholder="Enter a description about yourself" maxlength="160"><%= user.bio %></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input class="form-control" type="text" name="user[email]" placeholder="Enter Your Email Here" required value="<%= user.email%>">
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-lg btn-primary btn-block">Update</button>
+                            </div>
+                        </form>    
+                        <form class="delete-form user-profile-button" action="/users/<%= user._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-lg btn-danger btn-block" id="settings">Deactivate</button>
+                        </form>   
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>    
+</div>
+
+<% include ../partials/footer %>
