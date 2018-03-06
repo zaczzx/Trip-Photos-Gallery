@@ -45,7 +45,6 @@ router.get("/", function(req, res){
         Camp.find({name: regex}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, allCamps) {
             Camp.count({name: regex}).exec(function (err, count) {
                 if (err) {
-                    console.log(err);
                     res.redirect("back");
                 } else {
                     if (allCamps.length < 1) {
@@ -66,7 +65,6 @@ router.get("/", function(req, res){
         Camp.find({}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, allCamps) {
             Camp.count().exec(function (err, count) {
                 if (err) {
-                    console.log(err);
                 } else {
                     res.render("camps/index", {
                         camps:allCamps, 
@@ -124,7 +122,6 @@ router.get("/:id", function(req, res) {
     Camp.findById(req.params.id).populate("comments").exec(function(err, foundCamp){
        if (err || !foundCamp) {
            req.flash('error', 'Sorry, that camp does not exist!');
-           console.log(err);
        } else {
            res.render("camps/show", {camp: foundCamp});
        }

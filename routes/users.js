@@ -49,16 +49,10 @@ router.put("/:id", middleware.isLoggedIn, middleware.checkUserOwnsUser, upload.s
    if (req.file) {
         User.findById(req.params.id, function(err, foundUser) {
             if (err) {
-                console.log(err.message);
                 req.flash("error", "Something went wrong.");
                 return res.redirect("back");
             }
-            console.log(foundUser);
-            console.log(foundUser.avatar_id);
-            console.log(!foundUser.avatar_id === "0");
-            console.log(!foundUser.avatar_id === '0');
-            if (!foundUser.avatar_id === "0") {
-                console.log("im here");
+            if (!foundUser.avatar_id) {
                 cloudinary.v2.uploader.destroy(foundUser.avatar_id, function(err, result){
                     if(err) {
                       req.flash('error', err.message);
@@ -95,14 +89,12 @@ router.delete("/:id", middleware.isLoggedIn, middleware.checkUserOwnsUser, funct
         } else {
             Camp.find().where('author.id').equals(foundUser._id).remove().exec(function (err) {
                 if (err) {
-                    console.log("camps removed");
                     req.flash("error", "Something went wrong.");
                     return res.redirect("/camps");
                 }
             });
             Comment.find().where('author.id').equals(foundUser._id).remove().exec(function (err) {
                 if (err) {
-                    console.log("comments removed");
                     req.flash("error", "Something went wrong.");
                     return res.redirect("/camps");
                 }
