@@ -48,7 +48,7 @@ router.get("/:id", function (req, res) {
 router.put("/:id", middleware.isLoggedIn, middleware.checkUserOwnsUser, upload.single("avatar"), function(req, res){
    if (req.file) {
         User.findById(req.params.id, function(err, user) {
-            if (user.avatar_id) {
+            if (! user.avatar_id === "0") {
                 cloudinary.v2.uploader.destroy(user.avatar_id, function(err, result){
                     if(err) {
                       req.flash('error', err.message);
