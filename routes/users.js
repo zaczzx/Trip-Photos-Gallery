@@ -47,9 +47,14 @@ router.get("/:id", function (req, res) {
 
 router.put("/:id", middleware.isLoggedIn, middleware.checkUserOwnsUser, upload.single("avatar"), function(req, res){
    if (req.file) {
-        User.findById(req.params.id, function(err, user) {
-            if (! user.avatar_id === "0") {
-                cloudinary.v2.uploader.destroy(user.avatar_id, function(err, result){
+        User.findById(req.params.id, function(err, foundUser) {
+            if (err) {
+                req.flash("error", "Something went wrong.");
+                return res.redirect("back");
+            }
+            eval(require('locus'));
+            if (! foundUser.avatar_id === "0") {
+                cloudinary.v2.uploader.destroy(foundUser.avatar_id, function(err, result){
                     if(err) {
                       req.flash('error', err.message);
                       return res.redirect('back');
@@ -65,7 +70,7 @@ router.put("/:id", middleware.isLoggedIn, middleware.checkUserOwnsUser, upload.s
                 req.body.user.avatar_id = result.public_id;
                 User.findByIdAndUpdate(req.params.id, req.body.user, function(err) {
                     req.flash('success','Successfully Updated!');
-                    res.redirect('/users/' + user._id);
+                    res.redirect('/users/' + foundUser._id);
                 });
             });
         });

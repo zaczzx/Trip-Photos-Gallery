@@ -47,7 +47,6 @@ middleware.checkUserOwnsComment = function (req, res, next) {
 
 middleware.checkUserOwnsUser = function (req, res, next) {
     if (req.isAuthenticated()){
-        console.log(req.params);
         User.findById(req.params.id, function(err, foundUser) {
             if (err || !foundUser) {
                 req.flash("error", "User not found");
