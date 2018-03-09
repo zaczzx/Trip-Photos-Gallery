@@ -36,7 +36,7 @@ cloudinary.config({
 
 //index
 router.get("/", function(req, res){
-    var perPage = 6;
+    var perPage = 12;
     var pageQuery = parseInt(req.query.page);
     var pageNumber = pageQuery ? pageQuery : 1;
     var noMatch;

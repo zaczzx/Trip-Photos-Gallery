@@ -19,6 +19,8 @@
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
+    "infinite-scroll": "^3.0.3",
+    "isotope-layout": "^3.0.5",
     "locus": "^2.0.1",
     "method-override": "^2.3.10",
     "moment": "^2.20.1",

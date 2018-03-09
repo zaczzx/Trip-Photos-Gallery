@@ -9,7 +9,6 @@ var express         = require("express"),
     User            = require("./models/user");
     require('dotenv').config();
 
-
 var commentRoutes   = require("./routes/comments"),
     campRoutes      = require("./routes/camps"),
     indexRoutes     = require("./routes/index"),
