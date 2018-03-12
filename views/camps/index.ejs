@@ -30,12 +30,16 @@
         <% }); %> 
     </div>
 
-    <div class="pagination">
-      <a class="pagination_next" href="/camps?page=<%= Number(current) + 1 %>">Next</a>
-    </div>
+    <!--<div class="pagination">-->
+    <!--    <% if (current == pages) { %>-->
+    <!--    <li class="pagination_next disabled"><a>Next</a></li>-->
+    <!--    <% } else { %>-->
+    <!--    <li><a class="pagination_next" href="/camps?page=<%= Number(current) + 1 %>">Next</a></li>-->
+    <!--    <% } %>-->
+    <!--</div>-->
     
-    <div class="page-load-status">
-      <p class="infinite-scroll-request">Loading...</p>
+    <div class="page-load-status" style="font-size: 18px;">
+      <p class="infinite-scroll-request"><i class="fas fa-spinner"></i></p>
       <p class="infinite-scroll-last">End of content</p>
       <p class="infinite-scroll-error">No more pages to load</p>
     </div>
@@ -109,11 +113,19 @@
     });
 
     $grid.infiniteScroll({
-      path: '.pagination_next',
-      append: '.grid-item',
-      outlayer: msnry,
-      status: '.page-load-status',
-      hideNav: '.pagination',
+        path: function() {
+            if (this.loadCount === 0) this.loadCount++;
+            if (this.loadCount < <%= pages %>) {
+                var nextIndex = this.loadCount + 1;
+                return '/camps?page=' + nextIndex;
+            }
+        },
+        checkLastPage: true,
+        history: 'push',
+        append: '.grid-item',
+        outlayer: msnry,
+        status: '.page-load-status',
+        hideNav: '.pagination',
     });
     
 </script>
