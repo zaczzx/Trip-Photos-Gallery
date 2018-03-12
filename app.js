@@ -41,6 +41,13 @@ app.use(function(req, res, next){
     next();
 });
 
+if(typeof window != 'undefined'){
+  module.exports = require('brace');
+  require('brace/mode/javascript');
+  require('brace/theme/monokai');
+}
+// console.log(window);
+
 app.use("/",indexRoutes);
 app.use("/camps", campRoutes);
 app.use("/camps/:id/comments", commentRoutes);

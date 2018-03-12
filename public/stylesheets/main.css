@@ -32,17 +32,39 @@ body {
   width: 28px;
 }
 
-.grid-sizer,
+ /*reveal grid after images loaded */
+.grid.are-images-unloaded {
+  opacity: 0;
+}
+
+.grid_col-sizer,
 .grid-item {
-  width: 33.333%;
+  width: 32%;
+}
+
+.grid_gutter-sizer { 
+    width: 2%; 
+}
+
+ /*hide by default */
+.grid .are-images-unloaded .image-grid__item {
+  opacity: 0;
 }
 
 .grid-item {
+  margin-bottom: 20px;
   float: left;
 }
 
 .grid-item img {
   display: block;
   max-width: 100%;
-  padding: 10px 10px;
+}
+
+.page-load-status {
+  display: none; /* hidden by default */
+  padding-top: 20px;
+  border-top: 1px solid #DDD;
+  text-align: center;
+  color: #777;
 }

@@ -2,6 +2,7 @@ var express = require("express");
 var router  = express.Router();
 var Camp    = require("../models/camp");
 var Comment    = require("../models/comment");
+// var Isotope = require("../isotope");
 var middleware = require("../middleware");
 
 var NodeGeocoder = require('node-geocoder');
@@ -36,7 +37,7 @@ cloudinary.config({
 
 //index
 router.get("/", function(req, res){
-    var perPage = 12;
+    var perPage = 9;
     var pageQuery = parseInt(req.query.page);
     var pageNumber = pageQuery ? pageQuery : 1;
     var noMatch;
