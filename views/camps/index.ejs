@@ -1,12 +1,14 @@
 <% include ../partials/header %>
 
-<div class="container">
-    
+<div class="container index jumb">  
+
     <header class="jumbotron">
-        <div class="container">
+        <div class="jumbotron_text">
+           <div class="container">
             <h1>ZacCamp!</h1>
             <p>Amazing, wonderful camps.</p>
             <p>Handpicked camps from all over the world. Know Where they are, See How it is ⛺️</p>
+        </div> 
         </div>
     </header>
     
@@ -17,6 +19,10 @@
             <% } %>
         </div>
     </div>
+    
+</div>
+
+<div class="container index">
     
     <div class="grid are-images-unloaded">
         <div class="grid_col-sizer"></div>
@@ -29,14 +35,6 @@
             </div>
         <% }); %> 
     </div>
-
-    <!--<div class="pagination">-->
-    <!--    <% if (current == pages) { %>-->
-    <!--    <li class="pagination_next disabled"><a>Next</a></li>-->
-    <!--    <% } else { %>-->
-    <!--    <li><a class="pagination_next" href="/camps?page=<%= Number(current) + 1 %>">Next</a></li>-->
-    <!--    <% } %>-->
-    <!--</div>-->
     
     <div class="page-load-status" style="font-size: 18px;">
       <p class="infinite-scroll-request"><i class="fas fa-spinner"></i></p>
