@@ -13,6 +13,7 @@
         <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
         <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
         <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
+        <script src='https://www.google.com/recaptcha/api.js'></script>
     </head>
     <body>
     
@@ -41,7 +42,8 @@
               </ul>
               <ul class="nav navbar-nav">
                 <li class="<%= typeof page !== 'undefined' && page === 'camps' ? 'active' : '' %>"><a href="/camps">Home</a></li>
-                <li class="<%= typeof page !== 'undefined' && page === 'new' ? 'active' : '' %>"><a href="/camps/new">Add a Camp</a></li>
+                <li class="<%= typeof page !== 'undefined' && page === 'new' ? 'active' : '' %>"><a href="/camps/new">Post a camp</a></li>
+                <li class="<%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>"><a href="/contact">Contact me</a></li>
               </ul>
               <form action="/camps" method="GET" class="navbar-form navbar-left" >
                 <div class="form-group">

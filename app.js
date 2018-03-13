@@ -12,6 +12,7 @@ var express         = require("express"),
 var commentRoutes   = require("./routes/comments"),
     campRoutes      = require("./routes/camps"),
     indexRoutes     = require("./routes/index"),
+    contactRoutes = require("./routes/contact"),
     userRoutes      = require("./routes/users");
     
 var url = process.env.DATABASEURL || "mongodb://localhost/yelpcamp";
@@ -52,6 +53,7 @@ app.use("/",indexRoutes);
 app.use("/camps", campRoutes);
 app.use("/camps/:id/comments", commentRoutes);
 app.use("/users", userRoutes);
+app.use("/contact", contactRoutes);
 
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("SERVER WORKS");
