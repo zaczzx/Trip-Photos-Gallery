@@ -117,10 +117,15 @@
             if (this.loadCount === 0) this.loadCount++;
             if (this.loadCount < <%= pages %>) {
                 var nextIndex = this.loadCount + 1;
+                // console.log(<%= search %>);
+                // if (<%= search %>) {
+                //     nextIndex = nextIndex + "&search=" + <%= search %>;
+                // }
                 return '/camps?page=' + nextIndex;
             }
         },
         checkLastPage: true,
+        prefill: true,
         history: 'push',
         append: '.grid-item',
         outlayer: msnry,
