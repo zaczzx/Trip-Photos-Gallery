@@ -1,5 +1,5 @@
 body { 
-  padding-top: 60px;
+  padding-top: 52px;
   font-family: -apple-system,BlinkMacSystemFont,San Francisco,Helvetica Neue,Helvetica,Ubuntu,Roboto,Noto,Segoe UI,Arial,sans-serif;
   font-size: 15px;
   font-weight: 400;
@@ -13,6 +13,10 @@ body {
 
 .index {
   width: 100%;
+}
+
+.container .jumbotron, .container-fluid .jumbotron {
+    border-radius: 0;
 }
 
 .jumbotron {
@@ -40,12 +44,27 @@ body {
 }
 
 .navbar {
+  background-color: #fff;
   margin-bottom: 0px;
 }
 
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover{
   color: black;
   background-color: transparent;
+}
+
+.navbar-fixed-top {
+  border-width: 0 0 0;
+}
+
+.search_input {
+  width: 50%;
+  position: absolute;
+  border-radius: 20px;
+}
+
+.btn_search {
+  visibility: hidden
 }
 
 .thumbnail img {
