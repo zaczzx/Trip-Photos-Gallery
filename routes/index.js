@@ -5,6 +5,7 @@ var User        = require("../models/user");
 var async       = require("async");
 var nodemailer  = require("nodemailer");
 var crypto      = require("crypto");
+var request = require("request");
 
 //root 
 router.get("/", function(req, res){
@@ -18,20 +19,38 @@ router.get("/register", function(req, res) {
 
 //sign up logic
 router.post("/register", function(req, res) {
-    var newUser = new User({username: req.body.username, displayName: req.body.displayName, email: req.body.email});
-    if (req.body.adminCode === "zac is cool") {
-        newUser.isAdmin = true;
+    const captcha = req.body["g-recaptcha-response"];
+    if (!captcha) {
+      console.log(req.body);
+      req.flash("error", "Please select captcha");
+      return res.redirect("/register");
     }
-    newUser.avatar = "/images/user-default.png";
-    User.register(newUser, req.body.password, function(err, user) {
-        if (err) {
-            console.log(err);
-            return res.render("users/register", {error: err.message});
-        }
-        passport.authenticate("local")(req, res, function(){
-            req.flash("success", "Successfully Signed Up! Nice to meet you " + user.username);
-            res.redirect("/camps");
-        });
+    // secret key
+    var secretKey = process.env.RECAPTCHA_SECRET;
+    // Verify URL
+    var verifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captcha}&remoteip=${req.connection.remoteAddress}`;
+    // Make request to Verify URL
+    request.get(verifyURL, (err, response, body) => {
+      // if not successful
+      if (body.success !== undefined && !body.success) {
+        req.flash("error", "Captcha Failed");
+        return res.redirect("/register");
+      }
+      var newUser = new User({username: req.body.username, displayName: req.body.displayName, bio: req.body.bio, email: req.body.email});
+      if (req.body.adminCode === "zac is cool") {
+          newUser.isAdmin = true;
+      }
+      newUser.avatar = "/images/user-default.png";
+      User.register(newUser, req.body.password, function(err, user) {
+          if (err) {
+              console.log(err);
+              return res.render("users/register", {error: err.message});
+          }
+          passport.authenticate("local")(req, res, function(){
+              req.flash("success", "Successfully Signed Up! Nice to meet you " + user.username);
+              res.redirect("/camps");
+          });
+      });
     });
 });
 
