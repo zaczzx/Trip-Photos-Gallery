@@ -6,17 +6,21 @@ body {
   line-height: 1.6;
 }
 
+.index {
+  width: 100%;
+}
+
 .jumb {
   padding-left: 0px;
   padding-right: 0px;
 }
 
-.index {
-  width: 100%;
+.camps {
+  max-width: 1320px;
 }
 
 .container .jumbotron, .container-fluid .jumbotron {
-    border-radius: 0;
+  border-radius: 0;
 }
 
 .jumbotron {
