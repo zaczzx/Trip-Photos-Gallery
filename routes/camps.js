@@ -9,7 +9,8 @@ var NodeGeocoder = require('node-geocoder');
 var options = {
   provider: 'google',
   httpAdapter: 'https',
-  apiKey: process.env.GOOGLE_MAPS_API_KEY
+  apiKey: process.env.GOOGLE_MAPS_API_KEY,
+  formatter: null
 };
 var geocoder = NodeGeocoder(options);
 
@@ -88,6 +89,17 @@ router.post("/", middleware.isLoggedIn, upload.single('image'), function(req, re
             req.flash('error', 'Invalid address, try typing a new address');
             return res.redirect('back');
         }
+        //Error handling provided by google docs -https://developers.google.com/places/web-service/autocomplete 
+        if (err || data.status === 'REQUEST_DENIED') {
+            req.flash('error', 'Something Is Wrong Your Request Was Denied');
+            return res.redirect('back');
+        }
+
+        //Error handling provided by google docs -https://developers.google.com/places/web-service/autocomplete 
+        if (err || data.status === 'OVER_QUERY_LIMIT') {
+            req.flash('error', 'All Requests Used Up');
+            return res.redirect('back');
+        }
         req.body.camp.lat = data[0].latitude;
         req.body.camp.lng = data[0].longitude;
         req.body.camp.location = data[0].formattedAddress;
@@ -140,13 +152,23 @@ router.get("/:id/edit", middleware.checkUserOwnsCamp, function(req, res) {
     });
 });
 
-//UPDATE
 // UPDATE Camp ROUTE
 router.put("/:id", middleware.checkUserOwnsCamp, upload.single('image'), function(req, res){
     // if a new file has been uploaded
     geocoder.geocode(req.body.location, function (err, data) {
+        console.log(req.body.location);
         if (err || data.status === 'ZERO_RESULTS') {
             req.flash('error', 'Invalid address, try typing a new address');
+            return res.redirect('back');
+        }
+        //Error handling provided by google docs -https://developers.google.com/places/web-service/autocomplete 
+        if (err || data.status === 'REQUEST_DENIED') {
+            req.flash('error', 'Something Is Wrong Your Request Was Denied');
+            return res.redirect('back');
+        }
+        //Error handling provided by google docs -https://developers.google.com/places/web-service/autocomplete 
+        if (err || data.status === 'OVER_QUERY_LIMIT') {
+            req.flash('error', 'All Requests Used Up');
             return res.redirect('back');
         }
         req.body.camp.lat = data[0].latitude;
