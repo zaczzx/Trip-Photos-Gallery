@@ -21,7 +21,6 @@ router.get("/register", function(req, res) {
 router.post("/register", function(req, res) {
     const captcha = req.body["g-recaptcha-response"];
     if (!captcha) {
-      console.log(req.body);
       req.flash("error", "Please select captcha");
       return res.redirect("/register");
     }

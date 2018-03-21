@@ -9,7 +9,7 @@ var NodeGeocoder = require('node-geocoder');
 var options = {
   provider: 'google',
   httpAdapter: 'https',
-  apiKey: process.env.GOOGLE_MAPS_API_KEY,
+  apiKey: process.env.GEOCODER_API_KEY,
   formatter: null
 };
 var geocoder = NodeGeocoder(options);
@@ -156,7 +156,6 @@ router.get("/:id/edit", middleware.checkUserOwnsCamp, function(req, res) {
 router.put("/:id", middleware.checkUserOwnsCamp, upload.single('image'), function(req, res){
     // if a new file has been uploaded
     geocoder.geocode(req.body.location, function (err, data) {
-        console.log(req.body.location);
         if (err || data.status === 'ZERO_RESULTS') {
             req.flash('error', 'Invalid address, try typing a new address');
             return res.redirect('back');
