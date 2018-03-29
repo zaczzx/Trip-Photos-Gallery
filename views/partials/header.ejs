@@ -3,13 +3,21 @@
     <head>
         <!-- Make site responsive on mobile/tablet -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>YelpCamp</title>
+        <title>ZacCamp</title>
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <link rel="stylesheet" href="/stylesheets/main.css"></link>
+        <script
+          src="https://code.jquery.com/jquery-3.1.1.min.js"
+          integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+          crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+        <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+        <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
+        <script src='https://www.google.com/recaptcha/api.js'></script>
     </head>
     <body>
     
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top" >
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -18,22 +26,32 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
                 </button>
-    
-                <a class="navbar-brand" href="/">YelpCamp</a>
+                
+                <a class="navbar-brand" href="/">ZacCamp</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
-              <ul class="nav navbar-nav">
-                <li class="<%= typeof page !== 'undefined' && page === 'camps' ? 'active' : '' %>"><a href="/camps">Home</a></li>
-              </ul>
               <ul class="nav navbar-nav navbar-right">
                   <% if(!currentUser){ %>
                       <li class="<%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>"><a href="/login">Log In</a></li>
                       <li class="<%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>"><a href="/register">Sign Up</a></li>
                   <% } else { %>
-                      <li><a href="#">Signed In As <%= currentUser.username %></a></li>
-                      <li><a href="/logout">Logout</a></li>
+                      <li class="nav-link"><a href="/users/<%= currentUser.id %>"><img class="navbar-avatar" src=<%= currentUser.avatar %>></a></li>
+                      <li><a href="/logout">Logout <span class="glyphicon glyphicon-log-out"></a></li>
                   <% } %>
               </ul>
+              <ul class="nav navbar-nav">
+                <li class="<%= typeof page !== 'undefined' && page === 'camps' ? 'active' : '' %>"><a href="/camps">Home</a></li>
+                <li class="<%= typeof page !== 'undefined' && page === 'new' ? 'active' : '' %>"><a href="/camps/new">Post a camp</a></li>
+                <li class="<%= typeof page !== 'undefined' && page === 'contact' ? 'active' : '' %>"><a href="/contact">Contact me</a></li>
+              </ul>
+              <form action="/camps" method="GET" class="navbar-form navbar-left" >
+                <div class="form-group">
+                    <input type="text" name="search" placeholder="Search photos" class="form-control search_input">
+                    <button type="submit" class="btn btn-default btn_search">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </div>
+              </form>
             </div>
         </div>
     </nav>

@@ -1,15 +1,16 @@
-var middlewareObj = {};
-var Camp = require("../models/camp");
-var Comment = require("../models/comment");
+var middleware = {};
+var Camp    = require("../models/camp"),
+    Comment = require("../models/comment"),
+    User    = require("../models/user");
 
-middlewareObj.checkUserOwnsCamp = function (req, res, next) {
+middleware.checkUserOwnsCamp = function (req, res, next) {
     if (req.isAuthenticated()){
         Camp.findById(req.params.id, function(err, foundCamp) {
             if (err) {
                 req.flash("error", "Camp not found");
                 res.redirect("back");
             } else {
-                if (foundCamp.author.id.equals(req.user.id)) {
+                if (foundCamp.author.id.equals(req.user.id) || req.user.isAdmin) {
                     return next();
                 } else {
                     req.flash("error", "You don't have permission to do that");
@@ -23,14 +24,14 @@ middlewareObj.checkUserOwnsCamp = function (req, res, next) {
     }
 };
 
-middlewareObj.checkUserOwnsComment = function (req, res, next) {
+middleware.checkUserOwnsComment = function (req, res, next) {
     if (req.isAuthenticated()){
         Comment.findById(req.params.commentId, function(err, foundComment) {
             if (err) {
                 req.flash("error", "Comment not found");
                 res.redirect("back");
             } else {
-                if (foundComment.author.id.equals(req.user.id)) {
+                if (foundComment.author.id.equals(req.user.id) || req.user.isAdmin) {
                     return next();
                 } else {
                     req.flash("error", "You don't have permission to do that");
@@ -44,7 +45,28 @@ middlewareObj.checkUserOwnsComment = function (req, res, next) {
     }
 };
 
-middlewareObj.isLoggedIn = function (req, res, next) {
+middleware.checkUserOwnsUser = function (req, res, next) {
+    if (req.isAuthenticated()){
+        User.findById(req.params.id, function(err, foundUser) {
+            if (err || !foundUser) {
+                req.flash("error", "User not found");
+                res.redirect("back");
+            } else {
+                if (foundUser._id.equals(req.user.id) || req.user.isAdmin) {
+                    return next();
+                } else {
+                    req.flash("error", "You don't have permission to do that");
+                    res.redirect("back");
+                }
+            }
+        });
+    } else {
+        req.flash("error", "You need to be logged in to do that");
+        res.redirect("back");
+    }
+};
+
+middleware.isLoggedIn = function (req, res, next) {
     if (req.isAuthenticated()){
         return next();
     }
@@ -52,4 +74,4 @@ middlewareObj.isLoggedIn = function (req, res, next) {
     res.redirect("/login");
 };
 
-module.exports = middlewareObj;
+module.exports = middleware;

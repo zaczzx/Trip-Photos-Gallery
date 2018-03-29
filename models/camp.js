@@ -3,12 +3,13 @@ var mongoose = require("mongoose");
 var campSchema = new mongoose.Schema({
    name: String,
    image: String,
+   image_id: String,
    description: String,
    price: String,
    location: String,
    lat: Number,
    lng: Number,
-   createAt: {type: Date, default: Date.now},
+   createdAt: {type: Date, default: Date.now},
    author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,

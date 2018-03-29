@@ -2,10 +2,10 @@ var express     = require("express");
 var router      = express.Router({mergeParams: true});
 var Camp        = require("../models/camp");
 var Comment     = require("../models/comment");
-var middlewareObj = require("../middleware");
+var middleware = require("../middleware");
 
 //Comment new
-router.get("/new", middlewareObj.isLoggedIn, function(req, res) {
+router.get("/new", middleware.isLoggedIn, function(req, res) {
    Camp.findById(req.params.id, function(err, camp){
       if (err) {
           console.log(err);
@@ -16,7 +16,7 @@ router.get("/new", middlewareObj.isLoggedIn, function(req, res) {
 });
 
 //Comment create
-router.post("/", middlewareObj.isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, function(req, res){
    Camp.findById(req.params.id, function(err, camp) {
         if (err) {
             console.log(err);
@@ -40,7 +40,7 @@ router.post("/", middlewareObj.isLoggedIn, function(req, res){
 });
 
 //COMMENT Edit
-router.get("/:commentId/edit", middlewareObj.checkUserOwnsComment, function(req, res){
+router.get("/:commentId/edit", middleware.checkUserOwnsComment, function(req, res){
     Comment.findById(req.params.commentId, function(err, foundComment) {
        if (err) {
            res.redirect("back");
@@ -51,7 +51,7 @@ router.get("/:commentId/edit", middlewareObj.checkUserOwnsComment, function(req,
 });
 
 //COMMENT Update
-router.put("/:commentId", middlewareObj.checkUserOwnsComment, function(req, res){
+router.put("/:commentId", middleware.checkUserOwnsComment, function(req, res){
     Comment.findByIdAndUpdate(req.params.commentId, req.body.comment, function(err, updatedComment){
         if (err) {
             res.redirect("back");
@@ -62,7 +62,7 @@ router.put("/:commentId", middlewareObj.checkUserOwnsComment, function(req, res)
 });
 
 //COMMENT Delete
-router.delete("/:commentId", middlewareObj.checkUserOwnsComment, function(req, res){
+router.delete("/:commentId", middleware.checkUserOwnsComment, function(req, res){
     Comment.findByIdAndRemove(req.params.commentId, function(err){
         if (err) {
             res.redirect("back");

@@ -12,7 +12,9 @@ var express         = require("express"),
 
 var commentRoutes   = require("./routes/comments"),
     campRoutes      = require("./routes/camps"),
-    indexRoutes     = require("./routes/index");
+    indexRoutes     = require("./routes/index"),
+    contactRoutes = require("./routes/contact"),
+    userRoutes      = require("./routes/users");
     
 var url = process.env.DATABASEURL || "mongodb://localhost/yelpcamp";
 mongoose.connect(url); 
@@ -41,9 +43,18 @@ app.use(function(req, res, next){
     next();
 });
 
+if(typeof window != 'undefined'){
+  module.exports = require('brace');
+  require('brace/mode/javascript');
+  require('brace/theme/monokai');
+}
+// console.log(window);
+
 app.use("/",indexRoutes);
 app.use("/camps", campRoutes);
 app.use("/camps/:id/comments", commentRoutes);
+app.use("/users", userRoutes);
+app.use("/contact", contactRoutes);
 
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("SERVER WORKS");

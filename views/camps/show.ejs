@@ -3,11 +3,8 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <p class="lead">YelpCamp</p>
             <div class="list-group">
-                <li class="list-group-item active">Info 1</li>
-                <li class="list-group-item">Info 2</li>
-                <li class="list-group-item">Info 3</li>
+                <li class="list-group-item" style="background:orange">Location - Google Map</li>
             </div>
             <div id="map"></div>
         </div>
@@ -19,9 +16,9 @@
                     <h4><a><%= camp.name %></a></h4>
                     <p><%= camp.description %></p>
                     <p>
-                      <em>Submitted by: <%= camp.author.username %>, <%= moment(camp.createdAt).fromNow() %></em>
+                      <em>Submitted by: <a href="/users/<%= camp.author.id %>"><%= camp.author.username %></a>, <%= moment(camp.createdAt).fromNow() %></em>
                     </p>
-                    <% if (currentUser && camp.author.id.equals(currentUser._id)) { %>
+                    <% if (currentUser && camp.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
                         <a class="btn btn-warning" href="/camps/<%= camp._id %>/edit">Edit</a>
                         <form id="delete" action="/camps/<%= camp._id %>?_method=DELETE" method="POST">
                             <button class="btn btn-danger">DELETE</button>
@@ -80,7 +77,7 @@
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                             <% } %>
                             <!--Print out the author username-->
-                            <%= comment.author.username %>
+                            <a href="/users/<%= comment.author.id %>"><%= comment.author.username %></a>
                             </strong>
                     
                             <!--Show when the comment was made-->
@@ -90,7 +87,7 @@
                             <p><%= comment.text %></p>
                     
                             <!--If the visitor is logged in and the owner of the comment, show the edit and delete buttons-->
-                            <% if (currentUser && currentUser._id.equals(comment.author.id)) { %>                
+                            <% if (currentUser && currentUser._id.equals(comment.author.id) || currentUser && currentUser.isAdmin) { %>                
                                 <!--Edit button used for collapsing the edit comment form-->
                                 <a class="btn btn-xs btn-warning" role="button" data-toggle="collapse" href="#collapseEdit<%= comment._id %>" aria-expanded="false" aria-controls="collapse<%= comment._id %>">
                                 Edit</a>
@@ -152,5 +149,5 @@
     });
   }
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN6ZzlUjrykKAgGaNAyHk69XwBnIGrEyE&callback=initMap"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAPS_API_KEY %>&callback=initMap"></script>
 <% include ../partials/footer %>

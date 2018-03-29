@@ -3,20 +3,15 @@
 <div class="container">
     <div class="row">
         <h1 style="text-align:center">Edit <% camp.name %></h1>
-        <div style="width:30%; margin:25px auto">
-            <form action="/camps/<%= camp._id %>?_method=PUT" method="POST">
+        <div style="width:35%; margin:25px auto">
+            <form action="/camps/<%= camp._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input class="form-control" type="text" id="name" name="name" value="<%= camp.name %>">
-                </div>
-                <div class="form-group">
-                    <label for="cost">Cost</label>
-                    <input class="form-control" type="number" id="price" name="price" value="<%= camp.price %>" step="0.01" min="0" required>
+                    <input class="form-control" type="text" id="name" name="camp[name]" value="<%= camp.name %>">
                 </div>
                 <div class="form-group">
                     <label for="image">Image Url</label>
-                    <input class="form-control" type="text" id="image" name="image" pattern="^https:\/\/images\.unsplash\.com\/.*" title="Only images from images.unsplash.com allowed. See link below for instructions." placeholder="https://images.unsplash.com/..." value="<%= camp.image %>" required>
-                    <small>Click <a href="https://youtu.be/Bn3weNRQRDE">here</a> for tutorial on how to copy unsplash urls.</small>
+                    <input class="form-control" type="file" name="image" id="image" accept:"image/*" required>
                 </div>
                 <div class="form-group">
                     <label for="location">Location</label>
@@ -24,13 +19,17 @@
                 </div>
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <input class="form-control" type="text" id="description" name="description" value="<%= camp.description %>">
+                    <input class="form-control" type="text" id="description" name="camp[description]" value="<%= camp.description %>">
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input class="form-control" type="number" id="price" name="camp[price]" value="<%= camp.price %>" step="0.01" min="0" required>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block">Submit!</button>
                 </div>
             </form>
-            <a href="/camps">GO BACK</a>        
+            <a href="/camps">Go Back</a>        
         </div>
     </div>
 </div>
@@ -41,6 +40,6 @@
         var autocomplete = new google.maps.places.Autocomplete(input);
     }
 </script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN6ZzlUjrykKAgGaNAyHk69XwBnIGrEyE&libraries=places&callback=activatePlacesSearch"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLE_MAPS_API_KEY %>&libraries=places&callback=activatePlacesSearch"></script>
 <% include ../partials/footer %>
 
